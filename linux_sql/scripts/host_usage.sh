@@ -36,7 +36,5 @@ insert_query="INSERT INTO host_usage
 		info.hostname = '$hostname'
 	"
 
-echo "$insert_query"
-
 #Run insert query
 psql -h $psql_host -U $psql_user -d $db_name -p $psql_port -c "$insert_query"
