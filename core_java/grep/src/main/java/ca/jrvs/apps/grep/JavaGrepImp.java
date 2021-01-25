@@ -47,6 +47,7 @@ public class JavaGrepImp implements JavaGrep {
   }
 
   @Override
+
   public Stream<Path> listFiles(String rootDir) throws IOException {
 
     //Set up the stream and path respectively
@@ -57,6 +58,7 @@ public class JavaGrepImp implements JavaGrep {
 
     return walk.filter(Files::isRegularFile);
   }
+
 
   @Override
   public Stream<String> readLines(File inputFile) throws IOException {
@@ -82,6 +84,7 @@ public class JavaGrepImp implements JavaGrep {
   }
 
   @Override
+
   public void writeToFile(String lines) throws IOException {
 
     //Simple file writing of the results
@@ -89,7 +92,6 @@ public class JavaGrepImp implements JavaGrep {
     FileWriter fw = new FileWriter(file, true);
     fw.write(lines + "\n");
     fw.close();
-
 
   }
 
