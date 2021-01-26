@@ -47,7 +47,6 @@ public class JavaGrepImp implements JavaGrep {
   }
 
   @Override
-
   public Stream<Path> listFiles(String rootDir) throws IOException {
 
     //Set up the stream and path respectively
@@ -57,6 +56,7 @@ public class JavaGrepImp implements JavaGrep {
     Stream<Path> walk = Files.walk(path);
 
     return walk.filter(Files::isRegularFile);
+    
   }
 
 
