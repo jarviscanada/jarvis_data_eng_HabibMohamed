@@ -6,7 +6,6 @@ import org.apache.log4j.BasicConfigurator;
 
 public class JavaGrepMain {
 
-
   public static void main(String[] args) {
 
     if (args.length != 3) {
@@ -32,6 +31,5 @@ public class JavaGrepMain {
     }
 
   }
-
 
 }
