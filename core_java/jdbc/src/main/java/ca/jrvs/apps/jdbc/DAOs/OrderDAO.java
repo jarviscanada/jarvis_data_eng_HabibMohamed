@@ -86,10 +86,8 @@ public class OrderDAO extends DataAccessObject<Order> {
       return order;
 
     } catch (SQLException e) {
-
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
-
+      throw new RuntimeException("Either the PreparedStatement had trouble preparing or there was"
+          + " an incorrect interaction with the ResultSet", e);
     }
 
   }
