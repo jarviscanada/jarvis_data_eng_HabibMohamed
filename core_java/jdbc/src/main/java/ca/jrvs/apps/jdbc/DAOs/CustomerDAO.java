@@ -58,8 +58,8 @@ public class CustomerDAO extends DataAccessObject<Customer> {
       }
 
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
+      throw new RuntimeException("Either the PreparedStatement had trouble preparing or there was"
+          + " an incorrect interaction with the ResultSet", e);
     }
 
     return customer;
@@ -75,6 +75,12 @@ public class CustomerDAO extends DataAccessObject<Customer> {
 
     Customer customer = null;
 
+    try{
+      this.connection.setAutoCommit(false);
+    }catch (SQLException e){
+      throw new RuntimeException("Couldn't set AutoCommit to false", e);
+    }
+
     try(PreparedStatement statement = this.connection.prepareStatement(UPDATE);){
 
       statement.setString(1, dto.getFirstName());
@@ -87,12 +93,20 @@ public class CustomerDAO extends DataAccessObject<Customer> {
       statement.setString(8, dto.getZipCode());
       statement.setLong(9, dto.getId());
       statement.execute();
+      this.connection.commit();
 
       customer = this.findById(dto.getId());
 
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
+
+      try{
+        this.connection.rollback();
+      }catch (SQLException e2){
+        throw new RuntimeException("Rollback failed", e);
+      }
+
+      throw new RuntimeException("Either the PreparedStatement had trouble preparing or there was"
+          + " an incorrect interaction with the ResultSet, or commit failed", e);
     }
 
     return customer;
@@ -118,8 +132,8 @@ public class CustomerDAO extends DataAccessObject<Customer> {
       return this.findById(id);
 
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
+      throw new RuntimeException("Either the PreparedStatement had trouble preparing or there was"
+          + " an incorrect interaction with the ResultSet", e);
     }
   }
 
@@ -132,8 +146,7 @@ public class CustomerDAO extends DataAccessObject<Customer> {
       statement.execute();
 
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
+      throw new RuntimeException("The PreparedStatement had trouble preparing", e);
     }
 
   }

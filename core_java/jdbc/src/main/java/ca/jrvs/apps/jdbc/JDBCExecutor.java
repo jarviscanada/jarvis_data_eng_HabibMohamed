@@ -23,7 +23,7 @@ public class JDBCExecutor {
       //Use connection here
 
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
+      throw new RuntimeException("Either connection is faulty or something went wrong with DAO interaction", e);
     }
 
   }
