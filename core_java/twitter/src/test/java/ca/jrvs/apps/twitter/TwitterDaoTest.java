@@ -2,6 +2,8 @@ package ca.jrvs.apps.twitter;
 
 import static org.junit.Assert.*;
 
+import ca.jrvs.apps.twitter.impl.TwitterDao;
+import ca.jrvs.apps.twitter.impl.TwitterHttpHelper;
 import ca.jrvs.apps.twitter.model.Tweet;
 import ca.jrvs.apps.twitter.util.TweetBuilder;
 import org.junit.Before;

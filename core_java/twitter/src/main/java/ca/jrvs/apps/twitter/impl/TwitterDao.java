@@ -1,10 +1,9 @@
-package ca.jrvs.apps.twitter;
+package ca.jrvs.apps.twitter.impl;
 
 import ca.jrvs.apps.twitter.dao.CrdDao;
 import ca.jrvs.apps.twitter.dao.helper.HttpHelper;
 import ca.jrvs.apps.twitter.model.Tweet;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ca.jrvs.apps.twitter.util.JsonToTweet;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
@@ -30,22 +29,45 @@ public class TwitterDao implements CrdDao<Tweet, String> {
 
   final Logger logger = LoggerFactory.getLogger(TwitterDao.class);
 
+  /**
+   * Constructor generates a TwitterDao object with
+   * the requirement of passing in a httpHelper object,
+   * usually a TwitterHttpHelper object.
+   *
+   * @param httpHelper
+   */
   @Autowired
   public TwitterDao(HttpHelper httpHelper){this.httpHelper = httpHelper;}
 
-  public static Tweet fromJsonToModel(String response, Class clazz) throws IOException{
+  /**
+   * Using uri and method, either posts or gets
+   * and generate JSON string of response
+   *
+   * @param uri
+   * @param method
+   * @return String responseJSON
+   * @throws IOException
+   */
+  private String getJson(URI uri, String method) throws IOException{
 
-    ObjectMapper mapper = new ObjectMapper();
+    HttpResponse response = null;
 
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    if (method == "post"){
+      response = httpHelper.httpPost(uri);
+    }else{
+      response = httpHelper.httpGet(uri);
+    }
 
-    return (Tweet) mapper.readValue(response,clazz);
+    String responseJson = EntityUtils.toString(response.getEntity());
+
+    return responseJson;
 
   }
 
   @Override
   public Tweet create(Tweet entity) {
 
+    //Building request
     String tweetText = entity.getText();
     String tweetLon = String.valueOf(entity.getCoordinates().getCoordinates()[0]);
     String tweetLat = String.valueOf(entity.getCoordinates().getCoordinates()[1]);
@@ -54,63 +76,67 @@ public class TwitterDao implements CrdDao<Tweet, String> {
         + tweetText + AMPERSAND + "long" + EQUAL + tweetLon + AMPERSAND + "lat" +
         EQUAL + tweetLat);
 
+    Tweet responseTweet = null;
+
+    //Sending request
     try {
-      HttpResponse response = httpHelper.httpPost(postURI);
 
-      String responseJson = EntityUtils.toString(response.getEntity());
+      String responseJson = getJson(postURI, "post");
 
-      Tweet responseTweet = fromJsonToModel(responseJson, Tweet.class);
+      responseTweet = JsonToTweet.fromJsonToModel(responseJson, Tweet.class);
 
-      return responseTweet;
 
     }catch (IOException e){
-      logger.error(e.getMessage(), e);
+      throw new RuntimeException("There is a problem with the http request.");
     }
 
-    return null;
+    return responseTweet;
+
   }
 
   @Override
   public Tweet findById(String s) {
 
+    //Building request
     URI getURI = URI.create(API_BASE_URI + SHOW_PATH + QUERY_SYM + "id" + EQUAL + s);
 
+    Tweet responseTweet = null;
+
+    //Sending request
     try{
 
-      HttpResponse response = httpHelper.httpGet(getURI);
+      String responseJson = getJson(getURI, "get");
 
-      String responseJson = EntityUtils.toString(response.getEntity());
-
-      Tweet responseTweet = fromJsonToModel(responseJson, Tweet.class);
-
-      return responseTweet;
+      responseTweet = JsonToTweet.fromJsonToModel(responseJson, Tweet.class);
 
     }catch (IOException e){
-      logger.error(e.getMessage(), e);
+      throw new RuntimeException("There is a problem with the http request.");
     }
 
-    return null;
+    return responseTweet;
+
   }
 
   @Override
   public Tweet deleteById(String s) {
 
+    //Building request
     URI deleteURI = URI.create(API_BASE_URI + DELETE_PATH + "/" + s + ".json");
 
+    Tweet responseTweet = null;
+
+    //Sending request
     try{
 
-      HttpResponse response = httpHelper.httpPost(deleteURI);
+      String responseJson = getJson(deleteURI, "post");
 
-      String responseJson = EntityUtils.toString(response.getEntity());
-
-      Tweet responseTweet = fromJsonToModel(responseJson, Tweet.class);
-
-      return responseTweet;
+      responseTweet = JsonToTweet.fromJsonToModel(responseJson, Tweet.class);
 
     }catch(IOException e){
-      logger.error(e.getMessage(), e);
+      throw new RuntimeException("There is a problem with the http request.");
     }
 
-    return null;
+    return responseTweet;
+
   }
 }

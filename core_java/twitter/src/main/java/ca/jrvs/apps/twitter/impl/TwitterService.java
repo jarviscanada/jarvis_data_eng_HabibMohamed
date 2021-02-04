@@ -1,4 +1,4 @@
-package ca.jrvs.apps.twitter;
+package ca.jrvs.apps.twitter.impl;
 
 import ca.jrvs.apps.twitter.dao.CrdDao;
 import ca.jrvs.apps.twitter.model.Tweet;
@@ -11,8 +11,22 @@ public class TwitterService implements Service {
 
   private CrdDao dao;
 
+  /**
+   * Constructor generates a TwitterService object
+   * that requires a CrdDao object to be passed in,
+   * most likely a TwitterDao object.
+   *
+   * @param dao
+   */
   public TwitterService(CrdDao dao){this.dao = dao;}
 
+  /**
+   * Checks if text and coordinates do not violate
+   * Twitter constraints.
+   *
+   * @param tweet
+   * @return true if valid, false otherwise
+   */
   private boolean validateTweet(Tweet tweet){
 
     String text = tweet.getText();
@@ -23,6 +37,12 @@ public class TwitterService implements Service {
 
   }
 
+  /**
+   * Checks if id is numerical sequence
+   *
+   * @param id
+   * @return true if numerical sequence, false otherwise
+   */
   private boolean validateId(String id){
 
     return id.matches("[0-9]+");
@@ -56,6 +76,7 @@ public class TwitterService implements Service {
 
     List<Tweet> deletedTweets = new ArrayList<Tweet>();
 
+    //Goes through each id passed in the ids array
     Arrays.stream(ids)
         .forEach(
             id -> {

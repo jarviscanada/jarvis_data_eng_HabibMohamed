@@ -9,10 +9,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import ca.jrvs.apps.twitter.dao.helper.HttpHelper;
+import ca.jrvs.apps.twitter.impl.TwitterDao;
 import ca.jrvs.apps.twitter.model.Tweet;
-import ca.jrvs.apps.twitter.util.TweetBuilder;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
+import ca.jrvs.apps.twitter.util.JsonToTweet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -64,7 +63,7 @@ public class TwitterDaoUnitTest {
 
     when(mockHelper.httpPost(isNotNull())).thenReturn(null);
     TwitterDao spyDao = Mockito.spy(dao);
-    Tweet expectedTweet = spyDao.fromJsonToModel(tweet, Tweet.class);
+    Tweet expectedTweet = JsonToTweet.fromJsonToModel(tweet, Tweet.class);
 
     Tweet actualTweet = TweetBuild(text, lon, lat);
 
@@ -90,7 +89,7 @@ public class TwitterDaoUnitTest {
 
     when(mockHelper.httpGet(isNotNull())).thenReturn(null);
     TwitterDao spyDao = Mockito.spy(dao);
-    Tweet expectedTweet = spyDao.fromJsonToModel(tweet, Tweet.class);
+    Tweet expectedTweet = JsonToTweet.fromJsonToModel(tweet, Tweet.class);
 
     assertEquals(32.7621f,
         expectedTweet.getCoordinates().getCoordinates()[1], 0.0001);
@@ -115,7 +114,7 @@ public class TwitterDaoUnitTest {
 
     when(mockHelper.httpPost(isNotNull())).thenReturn(null);
     TwitterDao spyDao = Mockito.spy(dao);
-    Tweet expectedTweet = spyDao.fromJsonToModel(tweet, Tweet.class);
+    Tweet expectedTweet = JsonToTweet.fromJsonToModel(tweet, Tweet.class);
 
     assertEquals("1356708027643092996", expectedTweet.getId_str());
 

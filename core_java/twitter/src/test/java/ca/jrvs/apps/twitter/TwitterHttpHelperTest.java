@@ -1,7 +1,6 @@
 package ca.jrvs.apps.twitter;
 
-import static org.junit.Assert.*;
-
+import ca.jrvs.apps.twitter.impl.TwitterHttpHelper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
