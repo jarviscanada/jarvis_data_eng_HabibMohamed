@@ -3,6 +3,10 @@ package ca.jrvs.apps.twitter;
 import ca.jrvs.apps.twitter.controller.Controller;
 import ca.jrvs.apps.twitter.dao.CrdDao;
 import ca.jrvs.apps.twitter.dao.helper.HttpHelper;
+import ca.jrvs.apps.twitter.impl.TwitterController;
+import ca.jrvs.apps.twitter.impl.TwitterDao;
+import ca.jrvs.apps.twitter.impl.TwitterHttpHelper;
+import ca.jrvs.apps.twitter.impl.TwitterService;
 import ca.jrvs.apps.twitter.model.Tweet;
 import ca.jrvs.apps.twitter.service.Service;
 import java.util.List;
@@ -17,6 +21,7 @@ public class TwitterAppCLI {
 
   public static void run(String[] args){
 
+    //Pseudo menu control based on first argument passed in
     if (args[0].equalsIgnoreCase("post")){
 
       Tweet postedTweet = controller.postTweet(args);

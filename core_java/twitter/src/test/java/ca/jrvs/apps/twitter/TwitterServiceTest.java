@@ -3,9 +3,11 @@ package ca.jrvs.apps.twitter;
 import static org.junit.Assert.*;
 
 import ca.jrvs.apps.twitter.dao.CrdDao;
+import ca.jrvs.apps.twitter.impl.TwitterDao;
+import ca.jrvs.apps.twitter.impl.TwitterHttpHelper;
+import ca.jrvs.apps.twitter.impl.TwitterService;
 import ca.jrvs.apps.twitter.model.Coordinates;
 import ca.jrvs.apps.twitter.model.Tweet;
-import com.google.gdata.util.common.base.PercentEscaper;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;

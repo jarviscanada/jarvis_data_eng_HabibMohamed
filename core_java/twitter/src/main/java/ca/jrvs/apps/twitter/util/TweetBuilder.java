@@ -6,6 +6,15 @@ import com.google.gdata.util.common.base.PercentEscaper;
 
 public class TweetBuilder {
 
+  /**
+   * Takes a body of text, longitude, latitude, and formulates
+   * a Tweet objects housing them.
+   *
+   * @param text
+   * @param lon
+   * @param lat
+   * @return Tweet theTweet
+   */
   public static Tweet TweetBuild(String text, float lon, float lat){
 
     PercentEscaper percentEscaper = new PercentEscaper("", false);

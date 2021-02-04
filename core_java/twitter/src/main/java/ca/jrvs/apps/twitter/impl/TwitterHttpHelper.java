@@ -1,4 +1,4 @@
-package ca.jrvs.apps.twitter;
+package ca.jrvs.apps.twitter.impl;
 
 import ca.jrvs.apps.twitter.dao.helper.HttpHelper;
 import java.io.IOException;
@@ -39,6 +39,12 @@ public class TwitterHttpHelper implements HttpHelper {
 
   }
 
+  /**
+   * Signs a request with Authorization header containing
+   * Twitter API keys and secrets
+   *
+   * @param req
+   */
   private void authorize(Object req){
 
     try {
