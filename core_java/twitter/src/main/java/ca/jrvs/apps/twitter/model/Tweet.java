@@ -3,7 +3,6 @@ package ca.jrvs.apps.twitter.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.Date;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -51,6 +50,8 @@ public class Tweet {
 
   @JsonProperty("retweeted")
   private boolean retweeted;
+
+  private String specializedMessage;
 
 
   @JsonProperty("created_at")
@@ -153,19 +154,28 @@ public class Tweet {
     this.retweeted = retweeted;
   }
 
+  public String getSpecializedMessage() {
+    return specializedMessage;
+  }
+
+  public void setSpecializedMessage(String specializedMessage) {
+    this.specializedMessage = specializedMessage;
+  }
+
   @Override
   public String toString() {
-    return "Tweet{" +
-        "created_at='" + created_at + '\'' +
-        ", id=" + id +
-        ", id_str='" + id_str + '\'' +
-        ", text='" + text + '\'' +
-        ", entities=" + entities +
-        ", coordinates=" + coordinates +
-        ", retweet_count=" + retweet_count +
-        ", favorite_count=" + favorite_count +
-        ", favorited=" + favorited +
-        ", retweeted=" + retweeted +
-        '}';
+    return "{"
+        + "                        \"created_at\":\"" + created_at + "\""
+        + ",\n                         \"id\":\"" + id + "\""
+        + ",\n                         \"id_str\":\"" + id_str + "\""
+        + ",\n                         \"text\":\"" + text + "\""
+        + ",\n                         \"entities\":" + entities
+        + ",\n                         \"coordinates\":" + coordinates
+        + ",\n                         \"retweet_count\":\"" + retweet_count + "\""
+        + ",\n                         \"favorite_count\":\"" + favorite_count + "\""
+        + ",\n                         \"favorited\":\"" + favorited + "\""
+        + ",\n                         \"retweeted\":\"" + retweeted + "\""
+        + ",\n                         \"specializedMessage\":\"" + specializedMessage + "\""
+        + "}";
   }
 }

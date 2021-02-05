@@ -11,7 +11,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class TwitterDao implements CrdDao<Tweet, String> {
 
   private static final String API_BASE_URI = "https://api.twitter.com";
@@ -26,8 +28,6 @@ public class TwitterDao implements CrdDao<Tweet, String> {
   private static final int HTTP_OK = 200;
 
   private HttpHelper httpHelper;
-
-  final Logger logger = LoggerFactory.getLogger(TwitterDao.class);
 
   /**
    * Constructor generates a TwitterDao object with
@@ -56,6 +56,10 @@ public class TwitterDao implements CrdDao<Tweet, String> {
       response = httpHelper.httpPost(uri);
     }else{
       response = httpHelper.httpGet(uri);
+    }
+
+    if (response.getStatusLine().getStatusCode() != HTTP_OK){
+      throw new RuntimeException("Http response is not OK");
     }
 
     String responseJson = EntityUtils.toString(response.getEntity());

@@ -1,25 +1,21 @@
 package ca.jrvs.apps.twitter;
 
 import ca.jrvs.apps.twitter.controller.Controller;
-import ca.jrvs.apps.twitter.dao.CrdDao;
-import ca.jrvs.apps.twitter.dao.helper.HttpHelper;
-import ca.jrvs.apps.twitter.impl.TwitterController;
-import ca.jrvs.apps.twitter.impl.TwitterDao;
-import ca.jrvs.apps.twitter.impl.TwitterHttpHelper;
-import ca.jrvs.apps.twitter.impl.TwitterService;
 import ca.jrvs.apps.twitter.model.Tweet;
-import ca.jrvs.apps.twitter.service.Service;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TwitterAppCLI {
 
-  private static HttpHelper httpHelper;
-  private static CrdDao dao;
-  private static Service service;
-  private static Controller controller;
+  private Controller controller;
+
+  @Autowired
+  public TwitterAppCLI(Controller controller){ this.controller = controller; }
 
 
-  public static void run(String[] args){
+  public void run(String[] args){
 
     //Pseudo menu control based on first argument passed in
     if (args[0].equalsIgnoreCase("post")){
@@ -30,7 +26,7 @@ public class TwitterAppCLI {
     } else if (args[0].equalsIgnoreCase("show")){
 
       Tweet fetchedTweet = controller.showTweet(args);
-      System.out.println(fetchedTweet.toString());
+      System.out.println(fetchedTweet.getSpecializedMessage());
 
     } else if (args[0].equalsIgnoreCase("delete")){
 
@@ -48,21 +44,6 @@ public class TwitterAppCLI {
           + "TwitterAppCLI delete \"id\",...,\"id\"");
 
     }
-
-  }
-
-  public static void main(String[] args) {
-
-    httpHelper = new TwitterHttpHelper(System.getenv("consumerKey"), System.getenv("consumerSecret"),
-        System.getenv("accessToken"), System.getenv("tokenSecret"));
-
-    dao = new TwitterDao(httpHelper);
-
-    service = new TwitterService(dao);
-
-    controller = new TwitterController(service);
-
-    run(args);
 
   }
 

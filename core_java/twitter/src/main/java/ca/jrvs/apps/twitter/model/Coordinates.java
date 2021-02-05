@@ -27,9 +27,9 @@ public class Coordinates {
 
   @Override
   public String toString() {
-    return "Coordinates{" +
-        "coordinates=" + Arrays.toString(coordinates) +
-        ", type='" + type + '\'' +
-        '}';
+    return "{"
+        + "                        \"coordinates\":" + Arrays.toString(coordinates)
+        + ",                         \"type\":\"" + type + "\""
+        + "}";
   }
 }
