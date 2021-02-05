@@ -27,9 +27,9 @@ public class Entities {
 
   @Override
   public String toString() {
-    return "Entities{" +
-        "hashtags=" + Arrays.toString(hashtags) +
-        ", user_mentions=" + Arrays.toString(user_mentions) +
-        '}';
+    return "{"
+        + "                        \"hashtags\":" + Arrays.toString(hashtags)
+        + ",                         \"user_mentions\":" + Arrays.toString(user_mentions)
+        + "}";
   }
 }

@@ -54,13 +54,13 @@ public class UserMentions {
 
   @Override
   public String toString() {
-    return "UserMentions{" +
-        "id=" + id +
-        ", id_str='" + id_str + '\'' +
-        ", indices=" + Arrays.toString(indices) +
-        ", name='" + name + '\'' +
-        ", screen_name='" + screen_name + '\'' +
-        '}';
+    return "{"
+        + "                        \"id\":\"" + id + "\""
+        + ",                         \"id_str\":\"" + id_str + "\""
+        + ",                        \"indices\":" + Arrays.toString(indices)
+        + ",                        \"name\":\"" + name + "\""
+        + ",                        \"screen_name\":\"" + screen_name + "\""
+        + "}";
   }
 }
 

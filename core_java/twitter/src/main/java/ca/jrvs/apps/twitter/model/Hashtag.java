@@ -27,9 +27,9 @@ public class Hashtag {
 
   @Override
   public String toString() {
-    return "Hashtag{" +
-        "text='" + text + '\'' +
-        ", indices=" + Arrays.toString(indices) +
-        '}';
+    return "{"
+        + "                        \"text\":\"" + text + "\""
+        + ",                         \"indices\":" + Arrays.toString(indices)
+        + "}";
   }
 }

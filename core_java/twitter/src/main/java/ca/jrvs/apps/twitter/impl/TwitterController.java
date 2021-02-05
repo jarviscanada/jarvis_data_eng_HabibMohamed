@@ -5,7 +5,9 @@ import ca.jrvs.apps.twitter.model.Tweet;
 import ca.jrvs.apps.twitter.service.Service;
 import ca.jrvs.apps.twitter.util.TweetBuilder;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@org.springframework.stereotype.Controller
 public class TwitterController implements Controller {
 
   private final static String COORD_SEP = ":";
@@ -19,6 +21,7 @@ public class TwitterController implements Controller {
    *
    * @param service
    */
+  @Autowired
   public TwitterController(Service service){this.service = service;}
 
   @Override
@@ -65,18 +68,19 @@ public class TwitterController implements Controller {
   public Tweet showTweet(String[] args) {
 
     //Check if enough arguments provided
-    if (args.length != 2){
-      throw new IllegalArgumentException("Usage: TwitterAppCLI show \"id\"");
+    if (args.length < 2){
+      throw new IllegalArgumentException("Usage: TwitterAppCLI show \"id\" [\"fields\"]");
     }
 
     String id = args[1];
+    String[] fields = args.length > 2 ? args[2].split(COMMA) : null;
 
     //Check if id argument is not blank
     if (id.isEmpty()){
       throw new IllegalArgumentException("Please provide non-empty id value.\nUsage: TwitterAppCLI show \"id\"");
     }
 
-    return service.showTweet(id, null);
+    return service.showTweet(id, fields);
   }
 
   @Override

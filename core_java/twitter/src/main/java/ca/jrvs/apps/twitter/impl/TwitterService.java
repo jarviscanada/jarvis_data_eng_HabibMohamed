@@ -3,10 +3,16 @@ package ca.jrvs.apps.twitter.impl;
 import ca.jrvs.apps.twitter.dao.CrdDao;
 import ca.jrvs.apps.twitter.model.Tweet;
 import ca.jrvs.apps.twitter.service.Service;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.util.StringUtils;
 
+@org.springframework.stereotype.Service
 public class TwitterService implements Service {
 
   private CrdDao dao;
@@ -49,6 +55,45 @@ public class TwitterService implements Service {
 
   }
 
+  private void filterByField(Tweet tweet, String[] fields){
+
+    StringBuilder messageBuilder = new StringBuilder();
+
+    messageBuilder.append("{\n");
+
+    for (String field : fields){
+
+      messageBuilder.append("\"" + field + "\": ");
+
+      Method methodName = null;
+
+      try{
+        methodName = Tweet.class.getMethod("get" + StringUtils.capitalize(field));
+      }catch (NoSuchMethodException e){
+        throw new RuntimeException("The field " + field + " is an invalid field.");
+      }
+
+      Object result = null;
+       try{
+         result = methodName.invoke(tweet);
+       } catch (IllegalAccessException e) {
+         throw new RuntimeException("Permissions error.");
+       } catch (InvocationTargetException e2){
+         throw new RuntimeException("Problem with method invocation.");
+       }
+
+
+      messageBuilder.append("\"" + result.toString() + "\"\n,");
+
+
+    }
+
+    messageBuilder.append("}");
+
+    tweet.setSpecializedMessage(messageBuilder.toString());
+
+  }
+
   @Override
   public Tweet postTweet(Tweet tweet) {
 
@@ -68,7 +113,15 @@ public class TwitterService implements Service {
       throw new IllegalArgumentException("The ID " + id + " is invalid");
     }
 
-    return (Tweet) dao.findById(id);
+    Tweet tweet = (Tweet) dao.findById(id);
+
+    if (fields == null){
+      tweet.setSpecializedMessage(tweet.toString());
+    }else{
+      filterByField(tweet, fields);
+    }
+
+    return tweet;
   }
 
   @Override
