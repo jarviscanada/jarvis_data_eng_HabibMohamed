@@ -41,8 +41,7 @@ public abstract class DataAccessObject <T extends DataTransferObject> {
       }
       return key;
     }catch (SQLException e){
-      logger.error(e.getMessage(), e);
-      throw new RuntimeException(e);
+      throw new RuntimeException("Statement creation failed");
     }
   }
 }
