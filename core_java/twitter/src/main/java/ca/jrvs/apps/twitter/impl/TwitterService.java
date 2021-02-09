@@ -78,7 +78,7 @@ public class TwitterService implements Service {
          result = methodName.invoke(tweet);
        } catch (IllegalAccessException e) {
          throw new RuntimeException("Permissions error.");
-       } catch (InvocationTargetException e2){
+       } catch (InvocationTargetException e){
          throw new RuntimeException("Problem with method invocation.");
        }
 
