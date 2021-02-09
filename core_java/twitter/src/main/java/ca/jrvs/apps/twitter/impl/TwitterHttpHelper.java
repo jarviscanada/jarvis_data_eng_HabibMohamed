@@ -69,11 +69,11 @@ public class TwitterHttpHelper implements HttpHelper {
     try {
       consumer.sign(req);
     }catch (OAuthMessageSignerException e){
-      logger.error(e.getMessage(), e);
-    }catch(OAuthExpectationFailedException e2){
-      logger.error(e2.getMessage(), e2);
-    }catch(OAuthCommunicationException e3){
-      logger.error(e3.getMessage(), e3);
+      logger.error("Something went wrong with the signature", e);
+    }catch(OAuthExpectationFailedException e){
+      logger.error("Something went wrong with HTTP header Expect", e);
+    }catch(OAuthCommunicationException e){
+      logger.error("Something went wrong, most likely a SSL certificate issue", e);
     }
 
   }
