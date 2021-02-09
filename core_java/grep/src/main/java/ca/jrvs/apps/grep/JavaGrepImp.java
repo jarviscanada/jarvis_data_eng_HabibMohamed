@@ -34,12 +34,12 @@ public class JavaGrepImp implements JavaGrep {
                       try {
                         writeToFile(f);
                       } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
+                        logger.error("Error with file writing", e);
                       }
                     }
                 );//All matches are written to result file
           } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            logger.error("Error with line reading", e);
           }
         }
     );
