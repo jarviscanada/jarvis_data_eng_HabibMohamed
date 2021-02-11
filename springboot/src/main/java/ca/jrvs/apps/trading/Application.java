@@ -1,5 +1,37 @@
 package ca.jrvs.apps.trading;
 
-class Application {
+
+import ca.jrvs.apps.trading.controller.QuoteController;
+import ca.jrvs.apps.trading.service.QuoteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+
+@SpringBootApplication(exclude = {JdbcTemplateAutoConfiguration.class,
+    DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+public class Application implements CommandLineRunner {
+
+//  @Value("${app.init.dailyList}")
+//  private String[] initDailyList;
+
+  @Autowired
+  private QuoteController quoteController;
+
+  public static void main(String[] args) {
+    SpringApplication app = new SpringApplication(Application.class);
+    app.run(args);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+
+//    System.out.println(quoteController.getQuote(args[0]));
+
+  }
 
 }
