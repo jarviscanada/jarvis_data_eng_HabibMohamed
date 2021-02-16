@@ -47,9 +47,10 @@ public class QuoteService {
 
   }
 
-  public void updateMarketData(){
+  public List<Quote> updateMarketData(){
 
     List<Quote> quotes = quoteDao.findAll();
+    List<Quote> updatedQuotes = new ArrayList<Quote>();
 
     quotes.stream()
         .forEach(
@@ -57,9 +58,10 @@ public class QuoteService {
               IexQuote iexQuote = marketDataDao.findById(q.getId()).get();
               Quote quote = buildQuoteFromIexQuote(iexQuote);
               quoteDao.save(quote);
+              updatedQuotes.add(quote);
             }
         );
-
+    return updatedQuotes;
   }
 
   public Quote saveQuote(Quote quote) { return quoteDao.save(quote); }

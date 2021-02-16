@@ -61,11 +61,9 @@ public class QuoteServiceIntTest {
 
     Quote savedQuote = insertOne();
 
-    quoteService.updateMarketData();
+    List<Quote > quotes = quoteService.updateMarketData();
 
-    Quote quote = quoteDao.findById("aapl").get();
-
-    assertNotEquals(savedQuote.getLastPrice(), quote.getLastPrice());
+    assertNotEquals(savedQuote.getLastPrice(), quotes.get(0).getLastPrice());
 
   }
 
