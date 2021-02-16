@@ -131,7 +131,7 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
   public List<IexQuote> findAllById(Iterable<String> iterable) {
 
     iterable.forEach( s -> {
-          if (s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]*.*")){
+          if (s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]+.*")){
             throw new IllegalArgumentException("Symbol must be between 3-5 characters and have no numbers");
           }
         }
