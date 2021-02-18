@@ -2,6 +2,7 @@ package ca.jrvs.apps.trading;
 
 
 import ca.jrvs.apps.trading.controller.QuoteController;
+import ca.jrvs.apps.trading.controller.TraderAccountController;
 import ca.jrvs.apps.trading.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,9 @@ public class Application implements CommandLineRunner {
 
   @Autowired
   private QuoteController quoteController;
+
+  @Autowired
+  private TraderAccountController traderAccountController;
 
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(Application.class);

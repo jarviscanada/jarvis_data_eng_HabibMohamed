@@ -33,7 +33,7 @@ public class AppConfig {
    String jdbcUrl =
         "jdbc:postgresql://" +
             System.getenv("PSQL_HOST") + ":" +
-            System.getenv("PSQL_POST") + "/" +
+            System.getenv("PSQL_PORT") + "/" +
             System.getenv("PSQL_DB");
 
    String user = System.getenv("PSQL_USER");
