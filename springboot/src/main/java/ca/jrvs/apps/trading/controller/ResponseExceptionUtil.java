@@ -11,7 +11,7 @@ public class ResponseExceptionUtil {
       return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }else{
       return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-          "Internal issues ongoing");
+          "Internal issues ongoing: " + ex.getMessage());
     }
 
   }
