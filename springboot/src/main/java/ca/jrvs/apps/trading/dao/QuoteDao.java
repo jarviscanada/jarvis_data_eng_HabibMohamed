@@ -72,7 +72,7 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     String sql = "select count(*) as cnt from "  + TABLE_NAME + " where " + ID_COLUMN_NAME
         + " = ?";
 
-    int count = jdbcTemplate.queryForObject(sql, new Object[]{s}, Integer.class);
+    int count = jdbcTemplate.queryForObject(sql, Integer.class, s);
 
     return count > 0 ? true : false;
   }

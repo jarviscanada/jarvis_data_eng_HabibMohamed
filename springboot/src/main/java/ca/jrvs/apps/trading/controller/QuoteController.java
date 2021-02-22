@@ -38,6 +38,7 @@ public class QuoteController {
 
   @PutMapping(path = "/iexMarketData")
   @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
   public List<Quote> updateMarketData() {
 
     try{
