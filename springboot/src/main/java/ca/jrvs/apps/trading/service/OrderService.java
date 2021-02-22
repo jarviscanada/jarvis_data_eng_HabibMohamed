@@ -40,11 +40,11 @@ public class OrderService {
     SecurityOrder securityOrder = null;
     Account account = accountDao.findById(orderDto.getId()).get();
 
-    if(orderDto.getOrderType() == "buy"){
+    if(orderDto.getOrderType().equalsIgnoreCase( "buy")){
 
      securityOrder = handleBuyMarketOrder(orderDto, account);
 
-    }else if(orderDto.getOrderType() == "sell"){
+    }else if(orderDto.getOrderType().equalsIgnoreCase( "sell")){
 
       securityOrder = handleSellMarketOrder(orderDto, account);
 
@@ -59,7 +59,8 @@ public class OrderService {
 
     return orderDto.getId() != null && accountDao.existsById(orderDto.getId())
         && orderDto.getSize() > 0 && orderDto.getPrice() > 0
-        && (orderDto.getOrderType() == "buy" || orderDto.getOrderType() == "sell")
+        && (orderDto.getOrderType().equalsIgnoreCase("buy") ||
+          orderDto.getOrderType().equalsIgnoreCase( "sell"))
         && !orderDto.getTicker().isEmpty()
         && quoteDao.existsById(orderDto.getTicker());
 
