@@ -37,7 +37,7 @@ public class TraderAccountController {
   }
 
   @ApiOperation(value = "Create a trader and an account for it.",
-    notes = "TraderId and AccountId are identical and auto-generated.")
+      notes = "TraderId and AccountId are identical and auto-generated.")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   @PostMapping(
@@ -56,32 +56,32 @@ public class TraderAccountController {
       trader.setDob(Date.valueOf(dob));
       trader.setCountry(country);
       return traderAccountService.createTraderAndAccount(trader);
-    }catch (Exception e){
+    } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
 
   }
 
   @ApiOperation(value = "Create trader and their account with DTO",
-    notes = "TraderId and AccountId are auto-generated and identical")
+      notes = "TraderId and AccountId are auto-generated and identical")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   @PostMapping(path = "/", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
   public TraderAccountView createTrader(@RequestBody Trader trader) {
-    try  {
-      return  traderAccountService.createTraderAndAccount(trader);
+    try {
+      return traderAccountService.createTraderAndAccount(trader);
     } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
   }
 
   @ApiOperation(value = "Delete a trader",
-    notes = "Delete a trader depending on whether amount is 0 and no open positions")
+      notes = "Delete a trader depending on whether amount is 0 and no open positions")
   @ApiResponses(value = {@ApiResponse(code = 400, message = "Unable to delete trader")})
   @DeleteMapping(path = "/traderId/{traderId}")
   @ResponseStatus(HttpStatus.OK)
-  public void deleteTrader(@PathVariable Integer traderId){
-    try{
+  public void deleteTrader(@PathVariable Integer traderId) {
+    try {
       traderAccountService.deleteTraderById(traderId);
     } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
@@ -89,7 +89,7 @@ public class TraderAccountController {
   }
 
   @ApiOperation(value = "Deposit a fund",
-    notes = "Deposit funds to trader's account")
+      notes = "Deposit funds to trader's account")
   @ApiResponses(value = {
       @ApiResponse(code = 404, message = "traderId is not found"),
       @ApiResponse(code = 400, message = "Unable to deposit due to user input")})
@@ -97,9 +97,9 @@ public class TraderAccountController {
   @ResponseBody
   @PutMapping(path = "/deposit/traderId/{traderId}/amount/{amount}")
   public Account depositFund(@PathVariable Integer traderId, @PathVariable Double amount) {
-    try{
+    try {
       return traderAccountService.deposit(traderId, amount);
-    } catch (Exception e){
+    } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
   }
@@ -113,9 +113,9 @@ public class TraderAccountController {
   @ResponseBody
   @PutMapping(path = "/withdraw/traderId/{traderId}/amount/{amount}")
   public Account withdrawFund(@PathVariable Integer traderId, @PathVariable Double amount) {
-    try{
+    try {
       return traderAccountService.withdraw(traderId, amount);
-    } catch (Exception e){
+    } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
   }

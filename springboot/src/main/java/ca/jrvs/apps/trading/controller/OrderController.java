@@ -25,10 +25,12 @@ public class OrderController {
   private OrderService orderService;
 
   @Autowired
-  public OrderController(OrderService orderService) { this.orderService = orderService; }
+  public OrderController(OrderService orderService) {
+    this.orderService = orderService;
+  }
 
   @ApiOperation(value = "Submit a market order",
-    notes = "Submit a market order.")
+      notes = "Submit a market order.")
   @ApiResponses(value = {
       @ApiResponse(code = 404, message = "accountId or ticker not found"),
       @ApiResponse(code = 400, message = "User input invalid")})
@@ -36,13 +38,11 @@ public class OrderController {
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   public SecurityOrder postMarketOrder(@RequestBody MarketOrderDto orderDto) {
-
     try {
       return orderService.executeMarketOrder(orderDto);
-    } catch (Exception e){
+    } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
-
   }
 
 }

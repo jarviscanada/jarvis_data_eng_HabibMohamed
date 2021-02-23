@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TraderDao extends JdbcCrudDao<Trader>{
+public class TraderDao extends JdbcCrudDao<Trader> {
 
   private final String TABLE_NAME = "trader";
   private final String ID_COLUMN = "id";
@@ -26,12 +26,11 @@ public class TraderDao extends JdbcCrudDao<Trader>{
     return aTrader;
   };
 
-
   private JdbcTemplate jdbcTemplate;
   private SimpleJdbcInsert simpleInsert;
 
   @Autowired
-  public TraderDao(DataSource dataSource){
+  public TraderDao(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME)
         .usingGeneratedKeyColumns(ID_COLUMN);

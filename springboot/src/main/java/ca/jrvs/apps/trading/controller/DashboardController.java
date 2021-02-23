@@ -3,7 +3,6 @@ package ca.jrvs.apps.trading.controller;
 import ca.jrvs.apps.trading.model.views.PortfolioView;
 import ca.jrvs.apps.trading.model.views.TraderAccountView;
 import ca.jrvs.apps.trading.service.DashboardService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -24,21 +23,21 @@ public class DashboardController {
   private DashboardService dashboardService;
 
   @Autowired
-  public DashboardController(DashboardService dashboardService){
+  public DashboardController(DashboardService dashboardService) {
     this.dashboardService = dashboardService;
   }
 
   @ApiOperation(value = "Show trader profile by trader ID",
-    notes = "Show trader and account details.")
+      notes = "Show trader and account details.")
   @ApiResponses(value = {@ApiResponse(code = 404, message = "traderId or accountId not found")})
   @ResponseBody
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(path = "/profile/traderId/{traderId}", produces = {
       MediaType.APPLICATION_JSON_UTF8_VALUE})
-  public TraderAccountView getAccount(@PathVariable Integer traderId){
-    try{
+  public TraderAccountView getAccount(@PathVariable Integer traderId) {
+    try {
       return dashboardService.getTraderAccount(traderId);
-    } catch (Exception e){
+    } catch (Exception e) {
       throw ResponseExceptionUtil.getResponseStatusException(e);
     }
   }
@@ -48,11 +47,11 @@ public class DashboardController {
   @GetMapping(path = "/portfolio/traderId/{traderId}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public PortfolioView getPortfolioView(@PathVariable Integer traderId){
-    try{
+  public PortfolioView getPortfolioView(@PathVariable Integer traderId) {
+    try {
       return dashboardService.getPortfolioViewByTraderId(traderId);
-      } catch (Exception e) {
-        throw ResponseExceptionUtil.getResponseStatusException(e);
+    } catch (Exception e) {
+      throw ResponseExceptionUtil.getResponseStatusException(e);
     }
   }
 

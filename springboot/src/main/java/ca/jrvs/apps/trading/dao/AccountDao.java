@@ -1,7 +1,6 @@
 package ca.jrvs.apps.trading.dao;
 
 import ca.jrvs.apps.trading.model.domain.Account;
-import ca.jrvs.apps.trading.model.domain.Quote;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccountDao extends JdbcCrudDao<Account>{
+public class AccountDao extends JdbcCrudDao<Account> {
 
   private final String TABLE_NAME = "account";
   private final String ID_COLUMN = "id";
@@ -29,7 +28,7 @@ public class AccountDao extends JdbcCrudDao<Account>{
   private SimpleJdbcInsert simpleInsert;
 
   @Autowired
-  public AccountDao(DataSource dataSource){
+  public AccountDao(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME)
         .usingGeneratedKeyColumns(ID_COLUMN);
@@ -65,7 +64,14 @@ public class AccountDao extends JdbcCrudDao<Account>{
     return Account.class;
   }
 
-  private String buildUpdateSQLQuery(Account a){
+  /**
+   * Builds an sql query that updates the
+   * specified entity within the table.
+   *
+   * @param a
+   * @return String sqlQuery
+   */
+  private String buildUpdateSQLQuery(Account a) {
 
     return "update " + getTableName() + " set " +
         "amount = " + a.getAmount().toString() + " where " +

@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PositionDao extends JdbcCrudDao<Position>{
+public class PositionDao extends JdbcCrudDao<Position> {
 
   private final String TABLE_NAME = "position";
   private final String ID_COLUMN = "account_id";
@@ -24,13 +24,14 @@ public class PositionDao extends JdbcCrudDao<Position>{
     position.setPosition(resultSet.getInt("position"));
 
     return position;
+
   };
 
   private JdbcTemplate jdbcTemplate;
   private SimpleJdbcInsert simpleInsert;
 
   @Autowired
-  public PositionDao(DataSource dataSource){
+  public PositionDao(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME)
         .usingGeneratedKeyColumns(ID_COLUMN);

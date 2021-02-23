@@ -10,7 +10,7 @@ public class PortfolioView {
   private Double amount;
   private List<Position> positions;
 
-  public PortfolioView(Account account, List<Position> positions){
+  public PortfolioView(Account account, List<Position> positions) {
 
     this.id = account.getId();
     this.amount = account.getAmount();

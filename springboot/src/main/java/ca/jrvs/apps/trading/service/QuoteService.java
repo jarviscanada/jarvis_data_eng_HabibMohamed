@@ -18,14 +18,21 @@ public class QuoteService {
   private MarketDataDao marketDataDao;
 
   @Autowired
-  public QuoteService(MarketDataDao marketDataDao, QuoteDao quoteDao){
+  public QuoteService(MarketDataDao marketDataDao, QuoteDao quoteDao) {
 
     this.quoteDao = quoteDao;
     this.marketDataDao = marketDataDao;
 
   }
 
-  public List<Quote> saveQuotes(List<String> tickers){
+  /**
+   * Saves the tickers as quotes within
+   * the table and returns the quotes as a List.
+   *
+   * @param tickers
+   * @return List of Quote
+   */
+  public List<Quote> saveQuotes(List<String> tickers) {
 
     List<Quote> quotes = new ArrayList<Quote>();
 
@@ -35,19 +42,33 @@ public class QuoteService {
     return quotes;
   }
 
-  public Quote saveQuote(String ticker){
+  /**
+   * Takes the given ticker, gets the IexQuote
+   * associated with it, converts the IexQuote
+   * to a Quote, and saves that within the table,
+   * before returning the Quote.
+   *
+   * @param ticker
+   * @return Quote quote
+   */
+  public Quote saveQuote(String ticker) {
 
     IexQuote iexQuote = marketDataDao.findById(ticker).get();
 
     Quote quote = buildQuoteFromIexQuote(iexQuote);
 
-    quoteDao.save(quote);
+    saveQuote(quote);
 
     return quote;
 
   }
 
-  public List<Quote> updateMarketData(){
+  /**
+   * Updates all the quotes within the table.
+   *
+   * @return List of all Quote
+   */
+  public List<Quote> updateMarketData() {
 
     List<Quote> quotes = quoteDao.findAll();
     List<Quote> updatedQuotes = new ArrayList<Quote>();
@@ -62,21 +83,56 @@ public class QuoteService {
             }
         );
     return updatedQuotes;
+
   }
 
-  public Quote saveQuote(Quote quote) { return quoteDao.save(quote); }
+  /**
+   * Saves quote
+   *
+   * @param quote
+   * @return Quote
+   */
+  public Quote saveQuote(Quote quote) {
+    return quoteDao.save(quote);
+  }
 
-  public List<Quote> findAllQuotes() { return quoteDao.findAll(); }
+  /**
+   * Gets all Quote in table
+   *
+   * @return List of Quote
+   */
+  public List<Quote> findAllQuotes() {
+    return quoteDao.findAll();
+  }
 
-  public IexQuote findIexQuoteByTicker(String ticker){
+  /**
+   * Finds IexQuote using provided ticker
+   *
+   * @param ticker
+   * @return IexQuote
+   */
+  public IexQuote findIexQuoteByTicker(String ticker) {
     return marketDataDao.findById(ticker).get();
   }
 
-  public List<IexQuote> findIexQuotesByTickers(List<String> tickers){
+  /**
+   * Retrieves all IexQuotes corresponding
+   * to the list of tickers provided.
+   *
+   * @param tickers
+   * @return List of IexQuote
+   */
+  public List<IexQuote> findIexQuotesByTickers(List<String> tickers) {
     return marketDataDao.findAllById(tickers);
   }
 
-  protected static Quote buildQuoteFromIexQuote(IexQuote iexQuote){
+  /**
+   * Builds a Quote from an IexQuote
+   *
+   * @param iexQuote
+   * @return Quote quote
+   */
+  protected static Quote buildQuoteFromIexQuote(IexQuote iexQuote) {
 
     int askSize = iexQuote.getIexAskSize() == null ? 0 : iexQuote.getIexAskSize().intValue();
     double askPrice = iexQuote.getIexAskPrice() == null ? 0d : iexQuote.getIexAskPrice();

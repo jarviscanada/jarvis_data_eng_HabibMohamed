@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SecurityOrderDao extends JdbcCrudDao<SecurityOrder>{
+public class SecurityOrderDao extends JdbcCrudDao<SecurityOrder> {
 
   private final String TABLE_NAME = "security_order";
   private final String ID_COLUMN = "id";
@@ -32,12 +32,11 @@ public class SecurityOrderDao extends JdbcCrudDao<SecurityOrder>{
   private SimpleJdbcInsert simpleInsert;
 
   @Autowired
-  public SecurityOrderDao(DataSource dataSource){
+  public SecurityOrderDao(DataSource dataSource) {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME)
         .usingGeneratedKeyColumns(ID_COLUMN);
   }
-
 
   @Override
   public JdbcTemplate getJdbcTemplate() {

@@ -31,72 +31,111 @@ public class OrderService {
     this.positionDao = positionDao;
   }
 
-  public SecurityOrder executeMarketOrder(MarketOrderDto orderDto){
+  /**
+   * Creates and stores a SecurityOrder based
+   * on the attributes of the provided MarketOrderDto.
+   *
+   * @param orderDto
+   * @return SecurityOrder securityOrder
+   *
+   */
+  public SecurityOrder executeMarketOrder(MarketOrderDto orderDto) {
 
-    if(!validate(orderDto)){
+    if (!validate(orderDto)) {
       throw new IllegalArgumentException("Market order is invalid");
     }
 
     SecurityOrder securityOrder = null;
     Account account = accountDao.findById(orderDto.getId()).get();
 
-    if(orderDto.getOrderType().equalsIgnoreCase( "buy")){
-
-     securityOrder = handleBuyMarketOrder(orderDto, account);
-
-    }else if(orderDto.getOrderType().equalsIgnoreCase( "sell")){
-
+    if (orderDto.getOrderType().equalsIgnoreCase("buy")) {
+      securityOrder = handleBuyMarketOrder(orderDto, account);
+    } else if (orderDto.getOrderType().equalsIgnoreCase("sell")) {
       securityOrder = handleSellMarketOrder(orderDto, account);
-
     }
 
     SecurityOrder dbSecurityOrder = securityOrderDao.save(securityOrder);
-
     return dbSecurityOrder;
+
   }
 
+  /**
+   * Validates if provided MarketOrderDto
+   * is valid for further manipulation.
+   *
+   * @param orderDto
+   * @return true if valid, false otherwise
+   *
+   */
   private boolean validate(MarketOrderDto orderDto) {
 
     return orderDto.getId() != null && accountDao.existsById(orderDto.getId())
         && orderDto.getSize() > 0 && orderDto.getPrice() > 0
         && (orderDto.getOrderType().equalsIgnoreCase("buy") ||
-          orderDto.getOrderType().equalsIgnoreCase( "sell"))
+        orderDto.getOrderType().equalsIgnoreCase("sell"))
         && !orderDto.getTicker().isEmpty()
         && quoteDao.existsById(orderDto.getTicker());
 
   }
 
-  private SecurityOrder handleBuyMarketOrder(MarketOrderDto marketOrderDto, Account account){
+  /**
+   * Handles market orders of type "buy" and
+   * makes a SecurityOrder out of them.
+   *
+   * @param marketOrderDto
+   * @param account
+   * @return SecurityOrder securityOrder
+   */
+  private SecurityOrder handleBuyMarketOrder(MarketOrderDto marketOrderDto, Account account) {
 
     Double total = marketOrderDto.getPrice() * marketOrderDto.getSize();
     SecurityOrder securityOrder = new SecurityOrder();
 
-    if(account.getAmount() > total){
-
+    if (account.getAmount() > total) {
       securityOrder = fillIn(marketOrderDto, account);
-
     }
+
     return securityOrder;
+
   }
 
-  private SecurityOrder handleSellMarketOrder(MarketOrderDto marketOrderDto, Account account){
+  /**
+   * Handles market orders of type "sell" and
+   * makes SecurityOrder out of them.
+   *
+   * @param marketOrderDto
+   * @param account
+   * @return SecurityOrder securityOrder
+   *
+   */
+  private SecurityOrder handleSellMarketOrder(MarketOrderDto marketOrderDto, Account account) {
 
     SecurityOrder securityOrder = new SecurityOrder();
 
-    if(positionDao.existsById(account.getId())){
+    if (positionDao.existsById(account.getId())) {
 
       Position position = positionDao.findById(account.getId()).get();
 
-      if(marketOrderDto.getSize() <= position.getPosition()){
-
+      if (marketOrderDto.getSize() <= position.getPosition()) {
         securityOrder = fillIn(marketOrderDto, account);
-
       }
+
     }
+
     return securityOrder;
+
   }
 
-  private SecurityOrder fillIn(MarketOrderDto marketOrderDto, Account account){
+  /**
+   * Fills in a SecurityOrder with details from the
+   * provided Account and MarketOrderDto
+   *
+   * @param marketOrderDto
+   * @param account
+   * @return SecurityOrder securityOrder
+   *
+   */
+  private SecurityOrder fillIn(MarketOrderDto marketOrderDto, Account account) {
 
     SecurityOrder securityOrder = new SecurityOrder();
 
@@ -108,6 +147,7 @@ public class OrderService {
     securityOrder.setNotes(marketOrderDto.getOrderType());
 
     return securityOrder;
+
   }
 
 }

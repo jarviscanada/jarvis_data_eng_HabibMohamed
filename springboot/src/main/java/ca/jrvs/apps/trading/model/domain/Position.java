@@ -1,6 +1,6 @@
 package ca.jrvs.apps.trading.model.domain;
 
-public class Position implements Entity<Integer>{
+public class Position implements Entity<Integer> {
 
   private Integer id;
   private String ticker;

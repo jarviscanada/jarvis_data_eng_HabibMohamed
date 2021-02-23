@@ -28,23 +28,37 @@ public class TraderAccountService {
     this.securityOrderDao = securityOrderDao;
   }
 
-  public TraderAccountView createTraderAndAccount(Trader trader){
+  /**
+   * Builds a TraderAccountView that reflects the
+   * created Trader and Account built via the passed
+   * in Trader.
+   *
+   * @param trader
+   * @return TraderAccountView tAV
+   */
+  public TraderAccountView createTraderAndAccount(Trader trader) {
 
-    if(!validateTrader(trader))
+    if (!validateTrader(trader)) {
       throw new IllegalArgumentException("Please provide valid trader info");
+    }
 
     Trader dbTrader = traderDao.save(trader);
     Account account = fromTraderToAccount(dbTrader);
     Account dbAccount = accountDao.save(account);
 
     TraderAccountView tAV = new TraderAccountView(dbTrader, dbAccount);
-
     return tAV;
+
   }
 
-  public void deleteTraderById(Integer traderId){
+  /**
+   * Deletes Trader and anything dependent on it
+   * based on provided trader id.
+   * @param traderId
+   */
+  public void deleteTraderById(Integer traderId) {
 
-    if(traderId == null || !traderDao.existsById(traderId)){
+    if (traderId == null || !traderDao.existsById(traderId)) {
       throw new IllegalArgumentException("Trader Id provided does not exist");
     }
 
@@ -54,8 +68,8 @@ public class TraderAccountService {
         positionDao.existsById(account.getId()) ?
             positionDao.findById(account.getId()).get() : null;
 
-    if(account.getAmount() == 0d &&
-        (position == null || position.getPosition() == 0)){
+    if (account.getAmount() == 0d &&
+        (position == null || position.getPosition() == 0)) {
 
       securityOrderDao.deleteById(traderId);
       accountDao.deleteById(traderId);
@@ -65,13 +79,22 @@ public class TraderAccountService {
 
   }
 
-  public Account deposit(Integer traderId, Double fund){
+  /**
+   * Deposits the provided fund into the account specified
+   * by the provided id after conducting legality checks.
+   *
+   * @param traderId
+   * @param fund
+   * @return Account account
+   *
+   */
+  public Account deposit(Integer traderId, Double fund) {
 
-    if(validateTraderId(traderId)){
+    if (validateTraderId(traderId)) {
       throw new IllegalArgumentException("This trader id doesn't exist");
     }
 
-    if(fund <= 0d){
+    if (fund <= 0d) {
       throw new IllegalArgumentException("Funds must be greater than 0");
     }
 
@@ -80,44 +103,68 @@ public class TraderAccountService {
     account.setAmount(current + fund);
 
     Account updatedAccount = accountDao.save(account);
-
     return updatedAccount;
+
   }
 
-  public Account withdraw(Integer traderId, Double fund){
+  /**
+   * Withdraws the provided fund from the account
+   * specified by the provided id after conducting
+   * legality checks.
+   *
+   * @param traderId
+   * @param fund
+   * @return Account account
+   *
+   */
+  public Account withdraw(Integer traderId, Double fund) {
 
-    if(validateTraderId(traderId)){
+    if (validateTraderId(traderId)) {
       throw new IllegalArgumentException("This trader id doesn't exist");
     }
 
-    if(fund <= 0d){
+    if (fund <= 0d) {
       throw new IllegalArgumentException("Funds must be greater than 0");
     }
 
     Account account = accountDao.findById(traderId).get();
     Double current = account.getAmount();
 
-    if(current <= 0){
+    if (current <= 0) {
       throw new IllegalArgumentException("Can't withdraw from empty account");
     }
 
     account.setAmount(current - fund);
 
     Account updatedAccount = accountDao.save(account);
-
     return updatedAccount;
+
   }
 
-  private boolean validateTraderId(Integer traderId){
+  /**
+   * Check if trader id is valid
+   *
+   * @param traderId
+   * @return true if valid, false otherwise
+   *
+   */
+  private boolean validateTraderId(Integer traderId) {
     return traderId == null || !traderDao.existsById(traderId);
   }
 
-  private boolean validateTrader(Trader trader){
+  /**
+   * Checks if Trader object is valid
+   *
+   * @param trader
+   * @return true if valid, false otherwise
+   *
+   */
+  private boolean validateTrader(Trader trader) {
 
-    if(trader == null || trader.getFirst_name().isEmpty()
+    if (trader == null || trader.getFirst_name().isEmpty()
         || trader.getLast_name().isEmpty()
         || trader.getCountry().isEmpty()
-        || trader.getEmail() .isEmpty()
+        || trader.getEmail().isEmpty()
         || trader.getDob() == null) {
       return false;
     }
@@ -126,13 +173,18 @@ public class TraderAccountService {
 
   }
 
-  private Account fromTraderToAccount(Trader trader){
+  /**
+   * Makes an Account out of provided Trader.
+   *
+   * @param trader
+   * @return Account account
+   *
+   */
+  private Account fromTraderToAccount(Trader trader) {
 
     Account account = new Account();
-
     account.setTraderId(trader.getId());
     account.setAmount(0d);
-
     return account;
 
   }

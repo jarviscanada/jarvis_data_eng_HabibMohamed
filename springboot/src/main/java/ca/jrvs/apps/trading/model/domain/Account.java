@@ -1,6 +1,6 @@
 package ca.jrvs.apps.trading.model.domain;
 
-public class Account implements Entity<Integer>{
+public class Account implements Entity<Integer> {
 
   private Integer id;
   private Integer traderId;
@@ -13,7 +13,7 @@ public class Account implements Entity<Integer>{
 
   @Override
   public void setId(Integer id) {
-      this.id = id;
+    this.id = id;
   }
 
   public Integer getTraderId() {

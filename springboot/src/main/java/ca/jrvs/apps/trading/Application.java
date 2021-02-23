@@ -17,9 +17,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
     DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class Application implements CommandLineRunner {
 
-//  @Value("${app.init.dailyList}")
-//  private String[] initDailyList;
-
   @Autowired
   private QuoteController quoteController;
 
@@ -33,8 +30,6 @@ public class Application implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-
-//    System.out.println(quoteController.getQuote(args[0]));
 
   }
 

@@ -2,7 +2,7 @@ package ca.jrvs.apps.trading.model.domain;
 
 import java.sql.Date;
 
-public class Trader implements Entity<Integer>{
+public class Trader implements Entity<Integer> {
 
   private Integer id;
   private String first_name;

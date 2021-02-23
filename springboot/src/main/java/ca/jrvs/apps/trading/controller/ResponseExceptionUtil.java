@@ -5,15 +5,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class ResponseExceptionUtil {
 
-  public static ResponseStatusException getResponseStatusException(Exception ex){
-
-    if (ex instanceof  IllegalArgumentException){
+  public static ResponseStatusException getResponseStatusException(Exception ex) {
+    if (ex instanceof IllegalArgumentException) {
       return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }else{
+    } else {
       return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
           "Internal issues ongoing: " + ex.getMessage());
     }
-
   }
 
 }

@@ -29,13 +29,19 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME);
   }
 
+  /**
+   * Saves Quote into table.
+   *
+   * @param quote
+   * @return Quote savedQuote
+   */
   @Override
   public Quote save(Quote quote) {
 
-    if(existsById(quote.getId())){
+    if (existsById(quote.getId())) {
       String sql_query = buildUpdateSQLQuery(quote);
       jdbcTemplate.execute(sql_query);
-    }else{
+    } else {
       Map<String, Object> rowMap = buildCreateSQLQuery(quote);
       simpleJdbcInsert.execute(rowMap);
     }
@@ -43,6 +49,13 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     return quote;
   }
 
+  /**
+   * Save all quotes within given iterable to table.
+   *
+   * @param quotes
+   * @param <S>
+   * @return List of Quote
+   */
   @Override
   public <S extends Quote> List<S> saveAll(Iterable<S> quotes) {
 
@@ -53,42 +66,67 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     return (List) quotes;
   }
 
+  /**
+   * Finds Quote within table using
+   * provided ticker/id.
+   *
+   * @param s
+   * @return Quote encased in Optional
+   */
   @Override
   public Optional<Quote> findById(String s) {
 
     Quote quote = jdbcTemplate.queryForObject(
-        "select " + ALL_COLUMNS + " from "  + TABLE_NAME +
+        "select " + ALL_COLUMNS + " from " + TABLE_NAME +
             " where " + ID_COLUMN_NAME + " = ?",
         rowMapper,
         s
     );
 
     return Optional.of(quote);
+
   }
 
+  /**
+   * Checks if Quote exists in table
+   * using the provided ticker/id.
+   *
+   * @param s
+   * @return true if exists, false otherwise
+   */
   @Override
   public boolean existsById(String s) {
 
-    String sql = "select count(*) as cnt from "  + TABLE_NAME + " where " + ID_COLUMN_NAME
+    String sql = "select count(*) as cnt from " + TABLE_NAME + " where " + ID_COLUMN_NAME
         + " = ?";
 
     int count = jdbcTemplate.queryForObject(sql, Integer.class, s);
-
     return count > 0 ? true : false;
+
   }
 
+  /**
+   * Retrieves all Quotes in the table.
+   *
+   * @return List of Quote
+   */
   @Override
   public List<Quote> findAll() {
 
     List<Quote> quotes = jdbcTemplate.query(
-      "select " + ALL_COLUMNS + " from " + TABLE_NAME,
-      rowMapper
+        "select " + ALL_COLUMNS + " from " + TABLE_NAME,
+        rowMapper
     );
 
     return quotes;
+
   }
 
-
+  /**
+   * Counts how many Quote are in the table.
+   *
+   * @return long count
+   */
   @Override
   public long count() {
 
@@ -98,20 +136,30 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     );
 
     return count;
+
   }
 
+  /**
+   * Deletes the given Quote from
+   * the table using the ticker/id provided.
+   *
+   * @param s
+   */
   @Override
   public void deleteById(String s) {
 
     jdbcTemplate.update(
         "delete from " + TABLE_NAME + " where "
-        + ID_COLUMN_NAME + " = ?",
+            + ID_COLUMN_NAME + " = ?",
         s
     );
 
   }
 
-
+  /**
+   * Deletes all Quote from the table.
+   *
+   */
   @Override
   public void deleteAll() {
 
@@ -121,19 +169,33 @@ public class QuoteDao implements CrudRepository<Quote, String> {
 
   }
 
-  private String buildUpdateSQLQuery(Quote q){
+  /**
+   * Builds an update query for the
+   * given Quote.
+   *
+   * @param q
+   * @return String id/ticker
+   */
+  private String buildUpdateSQLQuery(Quote q) {
 
     return "update quote set " +
-        "last_price = " + q.getLastPrice().toString() +  ", " +
+        "last_price = " + q.getLastPrice().toString() + ", " +
         "ask_price = " + q.getAskPrice().toString() + ", " +
         "ask_size = " + q.getAskSize().toString() + ", " +
         "bid_price = " + q.getBidPrice().toString() + ", " +
         "bid_size = " + q.getBidSize().toString() + " where " +
-        ID_COLUMN_NAME + " = '" + q.getId()  + "'";
+        ID_COLUMN_NAME + " = '" + q.getId() + "'";
 
   }
 
-  private Map<String, Object> buildCreateSQLQuery(Quote q){
+  /**
+   * Builds a create query by means
+   * of a HashMap.
+   *
+   * @param q
+   * @return HashMap<String,Quote> map
+   */
+  private Map<String, Object> buildCreateSQLQuery(Quote q) {
 
     Map<String, Object> map = new HashMap<String, Object>(6);
     map.put(ID_COLUMN_NAME, q.getId());
@@ -147,8 +209,13 @@ public class QuoteDao implements CrudRepository<Quote, String> {
 
   }
 
-
+  /**
+   * Returns a RowMapper that builds and
+   * returns a Quote object from the ResultSet.
+   *
+   */
   private final RowMapper<Quote> rowMapper = (resultSet, rowNum) -> {
+
     Quote theQuote = new Quote();
     theQuote.setId(resultSet.getString("ticker"));
     theQuote.setAskPrice(resultSet.getDouble("ask_price"));
@@ -158,8 +225,14 @@ public class QuoteDao implements CrudRepository<Quote, String> {
     theQuote.setLastPrice(resultSet.getDouble("last_price"));
 
     return theQuote;
+
   };
 
+  /**
+   * Returns a RowMapper that return a long value
+   * that represents the count of rows within the table.
+   *
+   */
   private final RowMapper<Long> countMapper = (resultSet, rowNum) -> {
     return resultSet.getLong("count");
   };

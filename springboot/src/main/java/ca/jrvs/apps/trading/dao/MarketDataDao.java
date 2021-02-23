@@ -5,8 +5,6 @@ import ca.jrvs.apps.trading.model.domain.IexQuote;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -49,11 +47,11 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
   private Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
 
   public MarketDataDao(HttpClientConnectionManager httpCCM,
-      MarketDataConfig marketDataConfig){
+      MarketDataConfig marketDataConfig) {
 
     this.httpCCM = httpCCM;
 
-    IEX_BATCH_URL = marketDataConfig.getHost()  + IEX_STOCK
+    IEX_BATCH_URL = marketDataConfig.getHost() + IEX_STOCK
         + IEX_MARKET + "/batch" + QUERY +
         "symbols=" +
         IEX_SYMBOLS + AMPERSAND +
@@ -66,9 +64,14 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
         + IEX_TOKEN + marketDataConfig.getToken();
   }
 
-
-
-  private Optional<String> executeHttpGet(String url){
+  /**
+   * Sends a Get request to the url provided.
+   * Expects a response back.
+   *
+   * @param url
+   * @return String json, a json String, encased in Optional
+   */
+  private Optional<String> executeHttpGet(String url) {
 
     HttpClient client = getHttpClient();
     URI getURI = URI.create(url);
@@ -78,36 +81,37 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
 
       int status = response.getStatusLine().getStatusCode();
 
-      if (status != 200 ){
+      if (status != 200) {
 
-        if (status == 404)
+        if (status == 404) {
           return Optional.empty();
-        else
-          throw new DataRetrievalFailureException("The status of the response is " + String.valueOf(status));
+        } else {
+          throw new DataRetrievalFailureException(
+              "The status of the response is " + String.valueOf(status));
+        }
       }
 
       String json = EntityUtils.toString(response.getEntity());
-
       return Optional.of(json);
 
-    }catch (IOException e){
+    } catch (IOException e) {
       throw new DataRetrievalFailureException("Something went wrong with the Http request");
     }
 
   }
 
-  private CloseableHttpClient getHttpClient(){
-    return HttpClients.custom()
-        .setConnectionManager(httpCCM)
-        .setConnectionManagerShared(true)
-        .build();
-  }
-
+  /**
+   * Finds an IexQuote using provided ticker
+   *
+   * @param s
+   * @return IexQuote encased in Optional
+   */
   @Override
   public Optional<IexQuote> findById(String s) {
 
-    if(s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]+.*")){
-      throw new IllegalArgumentException("Symbol must be between 3-5 characters and have no numbers");
+    if (s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]+.*")) {
+      throw new IllegalArgumentException(
+          "Symbol must be between 3-5 characters and have no numbers");
     }
 
     String url = String.format(IEX_SINGLE_URL, s);
@@ -127,18 +131,26 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
 
   }
 
+  /**
+   * Finds all IexQuotes associated with the tickers
+   * stored in the provided iterable.
+   *
+   * @param iterable
+   * @return List of IexQuotes
+   */
   @Override
   public List<IexQuote> findAllById(Iterable<String> iterable) {
 
-    iterable.forEach( s -> {
-          if (s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]+.*")){
-            throw new IllegalArgumentException("Symbol must be between 3-5 characters and have no numbers");
+    iterable.forEach(s -> {
+          if (s.length() > 5 || s.length() < 3 || s.matches(".*[0-9]+.*")) {
+            throw new IllegalArgumentException(
+                "Symbol must be between 3-5 characters and have no numbers");
           }
         }
     );
 
     String ids = StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.joining(","));
+        .collect(Collectors.joining(","));
 
     String url = String.format(IEX_BATCH_URL, ids);
 
@@ -155,7 +167,7 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
 
     List<IexQuote> quotes = new ArrayList<IexQuote>();
 
-    do{
+    do {
 
       String newJson = jsonObject.get(keys.next()).toString();
 
@@ -167,13 +179,22 @@ public class MarketDataDao implements CrudRepository<IexQuote, String> {
         throw new DataRetrievalFailureException("Couldn't convert JSON to object");
       }
 
-    } while(keys.hasNext());
-
-//    System.out.println(jsonObject.toString());
-//    System.out.println(json.get());
+    } while (keys.hasNext());
 
     return quotes;
 
+  }
+
+  /**
+   * Builds and returns a CloseableHttpClient
+   *
+   * @return CloseableHttpClient cHC
+   */
+  private CloseableHttpClient getHttpClient() {
+    return HttpClients.custom()
+        .setConnectionManager(httpCCM)
+        .setConnectionManagerShared(true)
+        .build();
   }
 
   @Override
