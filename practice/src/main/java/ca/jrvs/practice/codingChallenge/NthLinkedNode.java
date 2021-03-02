@@ -2,6 +2,13 @@ package ca.jrvs.practice.codingChallenge;
 
 import ca.jrvs.practice.codingChallenge.helper.ListNode;
 
+/**
+ * Finds the nth node from the end and deletes it.
+ * Takes O(n) time, with n being the size of the list.
+ * This is due to the traversal through the list to find
+ * its size.
+ *
+ */
 public class NthLinkedNode {
 
   public ListNode nthListNode(ListNode head, int n) {
