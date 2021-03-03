@@ -83,7 +83,7 @@ SELECT
                         invoice_date
                     ) AS VARCHAR
             ) || CAST(
-                EXTARCT(
+                EXTRACT(
                         'month'
                             FROM
         invoice_date
