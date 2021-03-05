@@ -21,6 +21,8 @@ FROM
     DISTINCT customer_id
     FROM
     retail
+    WHERE
+    customer_id IS NOT NULL
     GROUP BY
     customer_id
     ) AS tble;
@@ -43,37 +45,24 @@ FROM
     stock_code
     ) AS tble;
 -- Average of invoices
-SELECT
-    AVG(invoice)
-FROM
+select
+    avg(qty) as average
+from
     (
-        SELECT
-                quantity * unit_price AS invoice
-        FROM
+        select
+            sum(quantity * unit_price) as qty
+        from
             retail
-        GROUP BY
-            quantity,
-            unit_price
-        HAVING
-                quantity >= 0
-           AND unit_price >= 0
-    ) AS tble;
+        group by
+            invoice_no
+        having
+                sum(quantity * unit_price) > 0
+    ) as subq;
 -- Total revenue
 SELECT
-    SUM(invoice)
+    SUM(quantity * unit_price) AS revenue
 FROM
-    (
-        SELECT
-                quantity * unit_price AS invoice
-        FROM
-            retail
-        GROUP BY
-            quantity,
-            unit_price
-        HAVING
-                quantity >= 0
-           AND unit_price >= 0
-    ) AS tble;
+    retail;
 -- Total revenue by month
 SELECT
         CAST(
@@ -85,8 +74,8 @@ SELECT
             ) || CAST(
                 EXTRACT(
                         'month'
-                            FROM
-        invoice_date
+                        FROM
+                        invoice_date
                     ) AS VARCHAR
             ) AS yyyymm,
         SUM(quantity * unit_price) AS invoice
@@ -94,3 +83,4 @@ FROM
     retail
 GROUP BY
     yyyymm;
+
