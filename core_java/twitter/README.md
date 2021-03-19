@@ -117,7 +117,8 @@ With JUnit, we executed integration test for each component and
 check for overall valid program flow.
 With Mockito, we conducted unit tests on the component to make
 sure the functions in them properly navigated through failed and
-successful scenarios.
+successful scenarios. The tests together accounted for roughly 60% line coverage.
+
 
 # Deployment
 We first packaged the program into a jar file, and we didn't
