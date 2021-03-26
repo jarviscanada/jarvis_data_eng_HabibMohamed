@@ -16,6 +16,13 @@ import org.springframework.util.StringUtils;
 public class TwitterService implements Service {
 
   private CrdDao dao;
+  
+  final static int MAX_TEXT_LENGTH = 140;
+  final static int MAX_LAT = 90;
+  final static int MIN_LAT = -90;
+  final static int MAX_LON = 180;
+  final static int MIN_LON = -180;
+
 
   /**
    * Constructor generates a TwitterService object
@@ -39,7 +46,9 @@ public class TwitterService implements Service {
     float lon = tweet.getCoordinates().getCoordinates()[0];
     float lat = tweet.getCoordinates().getCoordinates()[1];
 
-    return text.length() <= 140 && (lon <= 180 && lon >= -180) && (lat <= 90 && lat >= -90);
+    return text.length() <= MAX_TEXT_LENGTH && 
+      (lon <= MAX_LON && lon >= MIN_LON) && 
+      (lat <= MAX_LAT && lat >= MIN_LAT);
 
   }
 
@@ -70,16 +79,16 @@ public class TwitterService implements Service {
       try{
         methodName = Tweet.class.getMethod("get" + StringUtils.capitalize(field));
       }catch (NoSuchMethodException e){
-        throw new RuntimeException("The field " + field + " is an invalid field.");
+        throw new RuntimeException("The field " + field + " is an invalid field.", e);
       }
 
       Object result = null;
        try{
          result = methodName.invoke(tweet);
        } catch (IllegalAccessException e) {
-         throw new RuntimeException("Permissions error.");
+         throw new RuntimeException("Permissions error.", e);
        } catch (InvocationTargetException e){
-         throw new RuntimeException("Problem with method invocation.");
+         throw new RuntimeException("Problem with method invocation.", e);
        }
 
 

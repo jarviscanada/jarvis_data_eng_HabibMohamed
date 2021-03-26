@@ -59,7 +59,7 @@ public class TwitterDao implements CrdDao<Tweet, String> {
     }
 
     if (response.getStatusLine().getStatusCode() != HTTP_OK){
-      throw new RuntimeException("Http response is not OK");
+      throw new RuntimeException("Http response is not OK", e);
     }
 
     String responseJson = EntityUtils.toString(response.getEntity());
@@ -91,7 +91,7 @@ public class TwitterDao implements CrdDao<Tweet, String> {
 
 
     }catch (IOException e){
-      throw new RuntimeException("There is a problem with the http request.");
+      throw new RuntimeException("There is a problem with the http request.", e);
     }
 
     return responseTweet;
@@ -114,7 +114,7 @@ public class TwitterDao implements CrdDao<Tweet, String> {
       responseTweet = JsonToTweet.fromJsonToModel(responseJson, Tweet.class);
 
     }catch (IOException e){
-      throw new RuntimeException("There is a problem with the http request.");
+      throw new RuntimeException("There is a problem with the http request.", e);
     }
 
     return responseTweet;
@@ -137,7 +137,7 @@ public class TwitterDao implements CrdDao<Tweet, String> {
       responseTweet = JsonToTweet.fromJsonToModel(responseJson, Tweet.class);
 
     }catch(IOException e){
-      throw new RuntimeException("There is a problem with the http request.");
+      throw new RuntimeException("There is a problem with the http request.", e);
     }
 
     return responseTweet;
