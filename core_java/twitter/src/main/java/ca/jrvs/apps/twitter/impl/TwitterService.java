@@ -23,6 +23,7 @@ public class TwitterService implements Service {
   final static int MAX_LON = 180;
   final static int MIN_LON = -180;
 
+
   /**
    * Constructor generates a TwitterService object
    * that requires a CrdDao object to be passed in,
